@@ -13,12 +13,14 @@ namespace QRGenerator
     internal class Program
     {
         #region properties
+        private static int NAME_MAXLENGHT = 20;
         private const string excelPath = "D:\\Users\\Descargas\\Calificaciones (2)";
         private const string imagePath = $"D:\\Users\\Projects\\QRGenerator\\StudentsQR\\";
         private const string cardPath = $"D:\\Users\\Projects\\QRGenerator\\Card\\";
         private static readonly Microsoft.Office.Interop.Excel.Application excelApp = new();
         private static Workbook? workBook;
         private static Worksheet? WorkSheet;
+
         #endregion
 
         static void Main(string[] args)
@@ -26,6 +28,7 @@ namespace QRGenerator
             Console.WriteLine("Iniciando Programa");
 
             List<Student> students = GetStudents();
+
             int row = 1;
             foreach (Student student in students)
             {
@@ -98,7 +101,7 @@ namespace QRGenerator
                 QRCodeData codeData;
 
                 codeData = generator.CreateQrCode(data, QRCodeGenerator.ECCLevel.L);
-               // PngByteQRCode qrCode = new PngByteQRCode(codeData);
+                // PngByteQRCode qrCode = new PngByteQRCode(codeData);
                 QRCoder.BitmapByteQRCode qrCode = new QRCoder.BitmapByteQRCode(codeData);
 
                 byte[] qrCodeByteArr = qrCode.GetGraphic(4);
@@ -107,7 +110,7 @@ namespace QRGenerator
                 using var ms = new MemoryStream(qrCodeByteArr);
 
                 Bitmap bitmap = new Bitmap(ms);
-                
+
 
                 //var qr = new QRCodeWriter();
                 //var matrix = qr.encode(data, BarcodeFormat.QR_CODE, 100, 100);
@@ -175,6 +178,11 @@ namespace QRGenerator
             try
             {
                 System.Drawing.Image templateImage = System.Drawing.Image.FromFile("D:\\Users\\Projects\\QRGenerator\\Card\\template\\StudentCard2.PNG");
+                System.Drawing.Point studentNamePosition;
+                System.Drawing.Point studentIDPosition;
+                System.Drawing.Point QrPosition;
+                System.Drawing.Point studentNameHeaderPosition;
+                System.Drawing.Point studentIdHeaderPosition;
 
                 using (Graphics graphics = Graphics.FromImage(templateImage))
                 {
@@ -182,20 +190,41 @@ namespace QRGenerator
                     System.Drawing.Font font = new System.Drawing.Font("Roboto", 12, FontStyle.Bold);
                     SolidBrush brush = new SolidBrush(System.Drawing.Color.Black);
 
+
+
+                    //Sets the positions for Nombre and matricula headers.
+
+                    studentNameHeaderPosition = new System.Drawing.Point(100, 140);
+                    studentIdHeaderPosition = new System.Drawing.Point(100, 180);
+
                     // Define the positions to overlay student data
-                    System.Drawing.Point studentNamePosition = new System.Drawing.Point(30, 140);
-                    System.Drawing.Point studentIDPosition = new System.Drawing.Point(80, 170);
-                    System.Drawing.Point QrPosition = new System.Drawing.Point(100, 215);
+
+                    //accordong name lenght define the positions of name
+                    //if it's next to nombre label or below and move it in x axis in order to center it
+                    studentNamePosition = 
+                        item.Name.Length <= NAME_MAXLENGHT ? 
+                            new System.Drawing.Point(170, 140): 
+                            item.Name.Length >= 28 ? 
+                            new System.Drawing.Point(30, 160) :
+                            new System.Drawing.Point(100, 160);
+
+                    //Define student ID and QR positions in the image
+                        studentIDPosition =  new System.Drawing.Point(200, 180);
+                        QrPosition = new System.Drawing.Point(100, 225);
+         
+               
 
 
-                    // Draw student data on the template image
-                    graphics.DrawString("Nombre: " + item.Name, font, brush, studentNamePosition);
-                    graphics.DrawString("Matricula: " + item.Id, font, brush, studentIDPosition);
+                    graphics.DrawString("Nombre: ", font, brush, studentNameHeaderPosition);
+                    graphics.DrawString("Matricula: ", font, brush, studentIdHeaderPosition);
+                    //overlay Student Infotmation
 
-
-                    // Overlay the QR code
-                    Bitmap qrCode =  GenerateQR(item); // Adjust QR code size as needed
+                    graphics.DrawString( item.Name, font, brush, studentNamePosition);
+                    graphics.DrawString(item.Id, font, brush, studentIDPosition);
+                    //Create QRCode and DrawIt into the image.
+                    Bitmap qrCode = GenerateQR(item); // Adjust QR code size as needed
                     graphics.DrawImage(qrCode, QrPosition);
+
 
                     // Dispose of the font and brush
                     font.Dispose();
