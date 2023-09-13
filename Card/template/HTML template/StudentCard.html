@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,27 +12,31 @@
         }
 
         .card {
-            width: 300px;
+            width: 500px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             margin: 20px auto;
             padding: 20px;
+            height: 300px;
         }
 
         .student-photo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
+            width: 130px;
+            height: 130px;
+            border-radius: 5%;
+            margin: 0 0 10px;
             background-color: #ccc;
-            background-image: url('./student.png'); /* Reemplaza 'tu_foto_de_estudiante.jpg' con la URL de tu foto */
-            background-size: cover;
-            background-position: center;
+            background-image: url('./fondo\ bob.jpg');
+            /* Reemplaza 'tu_foto_de_estudiante.jpg' con la URL de tu foto */
+            background-size:cover;
+            background-position: right center;
+            ;
         }
 
         .student-info {
             text-align: center;
+            
         }
 
         .student-name {
@@ -46,6 +51,9 @@
         }
 
         .validity {
+           /* transform: rotate(270deg);
+            transform-origin: right top;*/
+            text-align: left;
             font-size: 12px;
             color: #888;
         }
@@ -55,20 +63,27 @@
             height: 100px;
             margin: 10px auto;
         }
-        img{
-            width : 80%;
+
+        img {
+            width: 80%;
             height: 80%;
         }
     </style>
 </head>
+
 <body>
     <div class="card">
         <div class="student-photo">
-            
+
         </div>
         <div class="student-info">
+           
             <div class="student-name"><br></div>
             <div class="student-id"><br></div>
+            <br>
+            <br>
+            <br> 
+            <br>        
             <div class="validity">Válido hasta: 31 de diciembre de 2023</div>
         </div>
         <br><br>
@@ -80,4 +95,5 @@
         </div>
     </div>
 </body>
+
 </html>
